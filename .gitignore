@@ -1,0 +1,10 @@
+﻿bin
+obj
+appsettings.json
+appsettings.Development.json
+FoodOrderingWebsiteMVC.sln
+wwwroot/lib/jquery-validation-unobtrusive
+wwwroot/lib/jquery-validation
+wwwroot/lib/jquery/dist
+wwwroot/lib/jquery/LICENSE.txt
+wwwroot/lib/bootstrap/dist

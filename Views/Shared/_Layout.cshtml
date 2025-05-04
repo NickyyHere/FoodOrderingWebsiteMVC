@@ -1,0 +1,42 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="border-bottom padding p-xs">
+                <div class="flex align-end">
+                    <ul class="flex direction-row gap-lg" style="align-items: baseline">
+                        <li>
+                            <a class="font-xl" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-house font-xl"></i> FoodOrderingWebsiteMVC</a>
+                        </li>
+                        <li class="">
+                            <a class="font-lg" asp-area="" asp-controller="Home" asp-action="Restaurants"><i class="fa-solid fa-utensils font-lg"></i> Restaurants</a>
+                        </li>
+                        <li class="">
+                            <a class="font-lg" asp-area="" asp-controller="Home" asp-action="Dishes"><i class="fa-solid fa-burger font-lg"></i> Dishes</a>
+                        </li>
+                        <li class="">                            
+                            <a class="font-lg" asp-area="" asp-controller="Home" asp-action="Order"><i class="fa-solid fa-motorcycle font-lg"></i> Order</a>
+                        </li>
+                    </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="https://kit.fontawesome.com/afde58873f.js" crossorigin="anonymous"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="_framework/blazor.server.js"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

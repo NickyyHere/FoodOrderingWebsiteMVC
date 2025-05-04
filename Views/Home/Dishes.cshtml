@@ -1,0 +1,15 @@
+@using FoodOrderingWebsiteMVC.DTO
+@model List<DishDTO> 
+
+<h2>Dishes</h2>
+<ul>
+    @foreach(var dish in Model)
+    {
+        <li>
+            <ul>
+                <li>@dish.Name</li>
+                <li>@dish.RestaurantName</li>
+            </ul>
+        </li>
+    }
+</ul>
