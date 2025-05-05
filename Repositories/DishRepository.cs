@@ -1,6 +1,4 @@
-using FoodOrderingWebsiteMVC.Create.DTO;
 using FoodOrderingWebsiteMVC.dbcontext;
-using FoodOrderingWebsiteMVC.Factories;
 using FoodOrderingWebsiteMVC.Interfaces.Reposiories;
 using FoodOrderingWebsiteMVC.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,40 +7,49 @@ namespace FoodOrderingWebsiteMVC.Repositories;
 public class DishRepository : IDishRepository
 {
     private readonly AppDbContext _context;
-    private readonly DishFactory _dishFactory;
-    public DishRepository(AppDbContext context, DishFactory dishFactory)
+    public DishRepository(AppDbContext context)
     {
         _context = context;
-        _dishFactory = dishFactory;
     }
-    public async Task AddAsync(CreateDishDTO dto)
+    public async Task AddAsync(Dish dish)
     {
-        await _context.Dishes.AddAsync(await _dishFactory.BuildAsync(dto));
+        await _context.Dishes.AddAsync(dish);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Dish dish)
     {
-        var dish = await _context.Dishes.FindAsync(id) ?? throw new Exception("");
         _context.Dishes.Remove(dish);
         await _context.SaveChangesAsync();
     }
 
     public async Task<List<Dish>> GetAllAsync()
     {
-        return await _context.Dishes.Include(d => d.Restaurant).ToListAsync();
+        return await _context.Dishes
+            .Include(d => d.Restaurant)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     public async Task<Dish> GetByIdAsync(int id)
     {
-        return  await _context.Dishes.Include(d => d.Restaurant).FirstOrDefaultAsync(d => d.Id == id) ?? throw new Exception("");
+        return await _context.Dishes
+            .Include(d => d.Restaurant)
+            .Include(d => d.Ingredients)
+                .ThenInclude(dd => dd.Ingredient)
+            .FirstOrDefaultAsync(d => d.Id == id)
+            ?? throw new Exception("");
     }
 
-    public async Task UpdateAsync(int id, CreateDishDTO dto)
+    public async Task<List<Dish>> GetByIdsAsync(List<int> ids)
     {
-        var oldDish = await _context.Dishes.FindAsync(id) ?? throw new Exception("");
-        var newDish = await _dishFactory.BuildAsync(dto);
-        _context.Entry(oldDish).CurrentValues.SetValues(newDish);
+        return await _context.Dishes
+            .Where(d => ids.Contains(d.Id))
+            .ToListAsync();
+    }
+
+    public async Task UpdateAsync()
+    {
         await _context.SaveChangesAsync();
     }
 }

@@ -1,6 +1,4 @@
-using FoodOrderingWebsiteMVC.Create.DTO;
 using FoodOrderingWebsiteMVC.dbcontext;
-using FoodOrderingWebsiteMVC.Factories;
 using FoodOrderingWebsiteMVC.Interfaces.Reposiories;
 using FoodOrderingWebsiteMVC.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,21 +7,18 @@ namespace FoodOrderingWebsiteMVC.Repositories;
 public class OrderRepository : IOrderRepository
 {
     public readonly AppDbContext _context;
-    public readonly OrderFactory _orderFactory;
-    public OrderRepository(AppDbContext context, OrderFactory orderFactory)
+    public OrderRepository(AppDbContext context)
     {
         _context = context;
-        _orderFactory = orderFactory;
     }
-    public async Task AddAsync(CreateOrderDTO dto)
+    public async Task AddAsync(Order order)
     {
-        await _context.Orders.AddAsync(await _orderFactory.BuildAsync(dto));
+        await _context.Orders.AddAsync(order);
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeleteAsync(int id)
+    public async Task DeleteAsync(Order order)
     {
-        var order = await _context.Orders.FindAsync(id) ?? throw new Exception("");
         _context.Orders.Remove(order);
         await _context.SaveChangesAsync();
     }
@@ -37,12 +32,8 @@ public class OrderRepository : IOrderRepository
     {
         return await _context.Orders.FindAsync(id) ?? throw new Exception("");
     }
-
-    public async Task UpdateAsync(int id, CreateOrderDTO dto)
+    public async Task UpdateAsync()
     {
-        var oldOrder = await _context.Orders.FindAsync(id) ?? throw new Exception("");
-        var newOrder = await _orderFactory.BuildAsync(dto);
-        _context.Entry(oldOrder).CurrentValues.SetValues(newOrder);
         await _context.SaveChangesAsync();
     }
 }
